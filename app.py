@@ -70,7 +70,8 @@ class APIHandler(BaseHTTPRequestHandler):
         if self.path in ("/", "/health"):
             return self.send_json(200, {
                 "status": "active",
-                "service": "Backend API"
+                "service": "Backend API",
+                "version": "2.0"
             })
 
         if self.path == "/messages":
