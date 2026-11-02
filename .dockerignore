@@ -1,0 +1,10 @@
+.git
+.gitignore
+README.md
+LAPORAN.md
+Jenkinsfile
+Dockerfile.jenkins
+tests
+__pycache__
+*.pyc
+.env
