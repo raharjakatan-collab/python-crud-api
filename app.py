@@ -81,8 +81,33 @@ class APIHandler(BaseHTTPRequestHandler):
                 "total": len(messages)
             })
 
+        if self.path.startswith("/messages/"):
+            return self.get_message(
+                self.path.removeprefix("/messages/")
+            )
+
         return self.send_json(404, {
             "error": "Endpoint not found"
+        })
+
+    def get_message(self, raw_index):
+        try:
+            index = int(raw_index)
+        except ValueError:
+            return self.send_json(400, {
+                "error": "Index must be an integer"
+            })
+
+        messages = read_messages()
+
+        if index < 0 or index >= len(messages):
+            return self.send_json(404, {
+                "error": "Message not found"
+            })
+
+        return self.send_json(200, {
+            "index": index,
+            "message": messages[index]
         })
 
     def do_POST(self):
@@ -117,7 +142,7 @@ class APIHandler(BaseHTTPRequestHandler):
                 "message": save_message(message)
             })
 
-        except (ValueError, json.JSONDecodeError):
+        except (ValueError, AttributeError):
             return self.send_json(400, {
                 "error": "Invalid JSON request body"
             })
